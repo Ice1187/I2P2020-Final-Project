@@ -1,0 +1,7 @@
+*.so
+*.o
+src/TEST/*
+.vscode
+src/build/*
+!src/build/.gitkeep
+!src/demo-binary/*
