@@ -1,6 +1,5 @@
-# I2P Final Project 開發流程
-
-> Team: Dorm Li-cursion
+How to Contribute
+========
 
 ## Branch Naming Convention
 
