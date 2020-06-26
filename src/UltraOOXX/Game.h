@@ -101,7 +101,7 @@ namespace TA
 
     private:
         // debug function
-        int tag2str(const Tag tag)
+        int tag2int(const Tag tag)
         {
             switch (tag)
             {
