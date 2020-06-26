@@ -1,4 +1,4 @@
-CXX = g++-8
+CXX = g++
 CXXFLAG = -std=c++17 -O2 -Wall -Wextra -fPIC
 GMAEINCLUDE = ./
 BUILDDIR = ./build
