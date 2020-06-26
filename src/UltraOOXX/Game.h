@@ -50,7 +50,9 @@ namespace TA
                     
                 }
                 updateGuiGame();
-            } 
+            }
+
+            putToGui("Gameover!\n");
         } 
 
    private:
