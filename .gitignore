@@ -5,3 +5,5 @@ src/TEST/*
 src/build/*
 !src/build/.gitkeep
 !src/demo-binary/*
+
+*.pptx
