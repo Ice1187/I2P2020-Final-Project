@@ -1,6 +1,26 @@
 {
   "files.associations": {
-    "type_traits": "cpp"
+    "type_traits": "cpp",
+    "array": "cpp",
+    "*.tcc": "cpp",
+    "string": "cpp",
+    "unordered_map": "cpp",
+    "memory": "cpp",
+    "optional": "cpp",
+    "string_view": "cpp",
+    "fstream": "cpp",
+    "future": "cpp",
+    "istream": "cpp",
+    "ostream": "cpp",
+    "vector": "cpp",
+    "sstream": "cpp",
+    "streambuf": "cpp",
+    "thread": "cpp",
+    "functional": "cpp",
+    "tuple": "cpp",
+    "cstdarg": "cpp",
+    "chrono": "cpp",
+    "cassert": "cpp"
   },
   "remote.WSL.fileWatcher.polling": true
 }
