@@ -37,7 +37,7 @@ namespace TA
             if( !prepareState() ) return ;
 
             //Todo: Play Game
-            putToGui("Hello world %d\n", 123);
+            putToGui("Game start\n");
             updateGuiGame();
 
             while (!checkGameover()) {          
