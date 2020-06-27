@@ -25,10 +25,10 @@ namespace TA
     class ASCII : public GUIInterface
     {
         const static int GRAPH_HIGHT = 7 + 15;
-        const static int GRAPH_WIDTH = 80;
+        const static int GRAPH_WIDTH = 100;
 
         const static int TEXT_HIGHT = 10;
-        const static int TEXT_WIDTH = 80;
+        const static int TEXT_WIDTH = 100;
 
         std::string m_preparedText;
         std::string m_textbuf;

@@ -4,7 +4,7 @@
             "name": "Linux",
             "includePath": [
                 "/usr/include",
-                "/mnt/c/Users/alan0/OneDrive/Desktop/I2P/I2P2020-Final-Project/src/"
+                "/home/atsushi/I2P2020/I2P2020-Final-Project/src"
             ],
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,

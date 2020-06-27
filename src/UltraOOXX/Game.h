@@ -14,7 +14,9 @@
 #include <algorithm>
 
 // include AI
-#include <AITemplate/DummyAI.h>
+#include <AITemplate/RandomAI.h>
+#include <AITemplate/FirstWinAI.h>
+// #include <AITemplate/MinMaxAI.h>
 
 namespace TA
 {
