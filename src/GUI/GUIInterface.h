@@ -22,6 +22,11 @@ namespace TA
 
     using std::printf;
 #define ESC "\033"
+#define RESET ESC "[0m"
+#define BOLD ESC "[1m"
+#define RED ESC "[31m"
+#define GREEN ESC "[32m"
+#define YELLOW ESC "[33m"
     class ASCII : public GUIInterface
     {
         const static int GRAPH_HIGHT = 7 + 15;
@@ -85,15 +90,14 @@ namespace TA
         virtual void title() override
         {
             cls();
-            puts(
-                ESC "[1m" ESC "[32m"
-                    R"( _   _ _ _             _____  _______   ____   __
+            puts(BOLD GREEN
+                 R"( _   _ _ _             _____  _______   ____   __
 | | | | | |           |  _  ||  _  \ \ / /\ \ / /
 | | | | | |_ _ __ __ _| | | || | | |\ V /  \ V /
 | | | | | __| '__/ _` | | | || | | |/   \  /   \
 | |_| | | |_| | | (_| \ \_/ /\ \_/ / /^\ \/ /^\ \
  \___/|_|\__|_|  \__,_|\___/  \___/\/   \/\/   \/
-)" ESC "[0m");
+)" RESET);
         }
 
         virtual void appendText(std::string str) override
@@ -125,13 +129,13 @@ namespace TA
             switch (s)
             {
             case BoardInterface::Tag::O:
-                ret = ESC "[33m";
+                ret = YELLOW;
                 break;
             case BoardInterface::Tag::X:
-                ret = ESC "[31m";
+                ret = RED;
                 break;
             default:
-                ret = ESC "[0m";
+                ret = RESET;
             }
             switch (t)
             {
@@ -145,7 +149,7 @@ namespace TA
                 ret += " ";
             }
 
-            ret += ESC "[0m";
+            ret += RESET;
             return ret;
         }
 
@@ -153,7 +157,6 @@ namespace TA
         // {
         //     gotoxy(7 + 1, 0);
         //     const std::string buf(20, ' ');
-
         //     for (int i = 0; i < 9; ++i)
         //     {
         //         std::printf("%s", buf.c_str());
@@ -170,7 +173,6 @@ namespace TA
         //             std::puts(std::string(12, '-').c_str());
         //         }
         //     }
-
         //     gotoxy(GRAPH_HIGHT + TEXT_HIGHT + 1, 0);
         // }
 

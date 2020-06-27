@@ -63,7 +63,6 @@ namespace TA
             while (!checkGameover())
             {
                 putToGui("[round] %d\n", round);
-                putToGui("[debug] Gameover state: %d, MainBoard state: %d\n", checkGameover(), MainBoard.getWinTag());
 
                 if (!playOneRound(first, tag, second))
                 {
@@ -85,7 +84,6 @@ namespace TA
                 putToGui("\n");
             }
 
-            putToGui("[debug] final Gameover state: %d\n", checkGameover());
             // Gameover
             putToGui("[info] Gameover!\n");
             switch (this->MainBoard.getWinTag())
