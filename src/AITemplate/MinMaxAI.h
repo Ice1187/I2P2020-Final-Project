@@ -185,9 +185,8 @@ public:
 
     int evalPos()
     {
-        int ret = (pos.first * 0) + 1;
         // return the evaluation of pos
-        return ret;
+        return 1;
     }
 
     void possibleEnemyMove(const std::pair<int, int> &pos, std::vector<std::pair<int, int>> &moves)
