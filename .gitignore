@@ -5,5 +5,5 @@ src/build/*
 !src/build/.gitkeep
 !src/demo-binary/*
 
-.vscode/settings.json
+.vscode/*
 *.pptx
