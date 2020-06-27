@@ -18,6 +18,6 @@ make AITYPE="AITYPE=$2" AI2
 make gamerunner
 
 cd ./build/
-./gamerunner
+COLUMNS=150 ./gamerunner
 cd ..
 
