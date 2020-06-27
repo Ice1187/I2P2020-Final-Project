@@ -209,6 +209,8 @@ namespace TA
             // `pos`: where user put the chess
             auto pos = call(&AIInterface::queryWhereToPut, user, MainBoard);
 
+            putToGui("[step]: (%d, %d)\n", pos.first, pos.second);
+
             // check whether `pos` is valid
             if (!isPutChessPosValid(pos))
                 return false;
