@@ -5,5 +5,6 @@ src/build/*
 !src/build/.gitkeep
 !src/demo-binary/*
 
+out 
 .vscode/*
 *.pptx
