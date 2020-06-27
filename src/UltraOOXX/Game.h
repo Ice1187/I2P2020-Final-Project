@@ -3,6 +3,7 @@
 #include <UltraOOXX/UltraBoard.h>
 #include <UltraOOXX/Wrapper/AI.h>
 #include <GUI/GUIInterface.h>
+#include <useful/boardUtils.h>
 
 #include <iostream>
 #include <cassert>
@@ -76,6 +77,7 @@ namespace TA
                 std::swap(first, second);
                 tag = (tag == Tag::O) ? Tag::X : Tag::O;
                 round++;
+                putToGui("\n");
             }
 
             // Gameover
@@ -177,16 +179,13 @@ namespace TA
 
         bool isPutChessPosValid(std::pair<int, int> pos)
         {
-            int prev_x = this->prev_pos.first;
-            int prev_y = this->prev_pos.second;
-            int pos_x = pos.first;
-            int pos_y = pos.second;
+            auto [nextSubboard_x, nextSubboard_y] = US::getNextSubboardId(this->prev_pos.first, this->prev_pos.second);
+            auto [pos_x, pos_y] = pos;
 
             // check if pos follows the prev pos restrict rule
-            if (prev_x >= 0 && prev_y >= 0)
-                if (!this->MainBoard.sub(prev_x / 3, prev_y / 3).full())
-                    if (!(prev_x / 3 * 3 <= pos_x && pos_x < prev_x / 3 * 3 + 3 &&
-                          prev_y / 3 * 3 <= pos_y && pos_y < prev_y / 3 * 3 + 3))
+            if (this->prev_pos.first >= 0 && this->prev_pos.second >= 0)
+                if (!this->MainBoard.sub(nextSubboard_x, nextSubboard_y).full())
+                    if (!US::inSubboard(pos_x, pos_y, nextSubboard_x, nextSubboard_y))
                         return false;
 
             // check `pos` is empty
