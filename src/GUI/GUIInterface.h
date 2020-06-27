@@ -24,11 +24,11 @@ namespace TA
 #define ESC "\033"
     class ASCII : public GUIInterface
     {
-        const static int GRAPH_HIGHT = 7 + 15;
-        const static int GRAPH_WIDTH = 100;
+        const static int GRAPH_HIGHT = 7 + 20;
+        const static int GRAPH_WIDTH = 150;
 
-        const static int TEXT_HIGHT = 10;
-        const static int TEXT_WIDTH = 100;
+        const static int TEXT_HIGHT = 20;
+        const static int TEXT_WIDTH = 150;
 
         std::string m_preparedText;
         std::string m_textbuf;
