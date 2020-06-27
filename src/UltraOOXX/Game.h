@@ -28,8 +28,6 @@ namespace TA
                                                                                          m_P2(nullptr),
                                                                                          MainBoard()
         {
-            // doesn't init in UltraBoard.h
-            this->MainBoard.setWinTag(Tag::None);
             gui = new ASCII;
         }
 
@@ -100,24 +98,6 @@ namespace TA
         }
 
     private:
-        // debug function
-        int tag2int(const Tag tag)
-        {
-            switch (tag)
-            {
-            case Tag::O:
-                return 1;
-            case Tag::X:
-                return 2;
-            case Tag::Tie:
-                return 3;
-            case Tag::None:
-                return 0;
-            default:
-                return -1;
-            }
-        }
-
         // self added function
         void updateBoardWinTag(BoardInterface &board)
         {
@@ -191,17 +171,38 @@ namespace TA
                 board.setWinTag(Tag::O);
             else if (X_win == true)
                 board.setWinTag(Tag::X);
-            else 
+            else
                 board.setWinTag(Tag::None);
+        }
+
+        bool isPutChessPosValid(std::pair<int, int> pos)
+        {
+            int prev_x = this->prev_pos.first;
+            int prev_y = this->prev_pos.second;
+            int pos_x = pos.first;
+            int pos_y = pos.second;
+
+            // check if pos follows the prev pos restrict rule
+            if (prev_x >= 0 && prev_y >= 0)
+                if (!this->MainBoard.sub(prev_x / 3, prev_y / 3).full())
+                    if (!(prev_x / 3 * 3 <= pos_x && pos_x < prev_x / 3 * 3 + 3 &&
+                          prev_y / 3 * 3 <= pos_y && pos_y < prev_y / 3 * 3 + 3))
+                        return false;
+
+            // check `pos` is empty
+            if (this->MainBoard.get(pos_x, pos_y) != Tag::None)
+                return false;
+
+            return true;
         }
 
         bool playOneRound(AIInterface *user, Tag tag, AIInterface *enemy)
         {
             // `pos`: where user put the chess
             auto pos = call(&AIInterface::queryWhereToPut, user, MainBoard);
-           
+
             // check whether `pos` is valid
-            if (this->MainBoard.get(pos.first, pos.second) != Tag::None)
+            if (!isPutChessPosValid(pos))
                 return false;
 
             // put the chess
@@ -210,6 +211,8 @@ namespace TA
 
             // callback enemy
             enemy->callbackReportEnemy(pos.first, pos.second);
+            // callback UltraOOXX
+            this->prev_pos = pos;
 
             return true;
         }
@@ -233,6 +236,9 @@ namespace TA
         {
             call(&AIInterface::init, m_P1, true);
             call(&AIInterface::init, m_P2, false);
+            // doesn't init in UltraBoard.h
+            this->MainBoard.setWinTag(Tag::None);
+            this->prev_pos = std::make_pair(-1, -1);
             return true;
         }
 
@@ -291,6 +297,9 @@ namespace TA
         {
             return ptr->abi() == AI_ABI_VER;
         }
+
+        // self added variables
+        std::pair<int, int> prev_pos;
 
         int m_size;
         std::vector<int> m_ship_size;
