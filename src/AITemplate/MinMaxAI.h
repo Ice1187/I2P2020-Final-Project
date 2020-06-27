@@ -49,10 +49,10 @@ public:
         int subboard_y = this->prev_y % 3;
         TA::Board subboard = this->all_board.sub(subboard_x, subboard_y);
 
-        int eval;
+        int eval = 0;
         int minEval = INF;
         int maxEval = -INF;
-        std::pair<int, int> cur_step, best_step;
+        std::pair<int, int> cur_step(-1, -1), best_step(-1, -1);
 
         if (!subboard.full())
         {
@@ -112,39 +112,6 @@ public:
         return best_step;
     }
 
-    // can only find the best step of given sub board
-    std::pair<int, int> findStep(TA::Board board)
-    {
-        int eval;
-        int minEval = INF;
-        int maxEval = -INF;
-        std::pair<int, int> cur_step, best_step;
-        for (int i = 0; i < 3; i++)
-        {
-            cur_step.first = i;
-            for (int j = 0; j < 3; j++)
-            {
-                if (board.state(i, j) == TA::BoardInterface::Tag::None)
-                {
-                    cur_step.second = j;
-                    eval = minmax(cur_step, 3, -INF, INF, this->order);
-                    if (this->order == true && eval > maxEval)
-                    {
-                        best_step = cur_step;
-                        maxEval = eval;
-                    }
-                    else if (this->order == false && eval < minEval)
-                    {
-                        best_step = cur_step;
-                        minEval = eval;
-                    }
-                }
-            }
-        }
-
-        return best_step;
-    }
-
     int minmax(std::pair<int, int> &pos, int depth, int alpha, int beta, bool player)
     {
         if (depth == 0)
@@ -152,7 +119,7 @@ public:
             if (this->all_board.get(pos.first, pos.second) == TA::BoardInterface::Tag::None)
             {
                 this->all_board.get(pos.first, pos.second) = player2tag(player);
-                int ret = evalPos(pos);
+                int ret = evalPos();
                 this->all_board.get(pos.first, pos.second) = TA::BoardInterface::Tag::None;
                 return ret;
             }
@@ -170,7 +137,8 @@ public:
                 throw "error";
             }
 
-            int eval, maxEval = -INF;
+            int eval = 0;
+            int maxEval = -INF;
 
             std::vector<std::pair<int, int>> enemyMoves;
             possibleEnemyMove(pos, enemyMoves);
@@ -196,7 +164,8 @@ public:
                 throw "error";
             }
 
-            int eval, minEval = INF;
+            int eval = 0;
+            int minEval = INF;
 
             std::vector<std::pair<int, int>> enemyMoves;
             possibleEnemyMove(pos, enemyMoves);
@@ -214,10 +183,11 @@ public:
         }
     }
 
-    int evalPos(std::pair<int, int> &pos)
+    int evalPos()
     {
+        int ret = (pos.first * 0) + 1;
         // return the evaluation of pos
-        return pos.first - pos.second;
+        return ret;
     }
 
     void possibleEnemyMove(const std::pair<int, int> &pos, std::vector<std::pair<int, int>> &moves)
@@ -237,10 +207,13 @@ public:
         {
             for (subboard_x = 0; subboard_x < 3; subboard_x++)
                 for (subboard_y = 0; subboard_y < 3; subboard_y++)
+                {
+                    subboard = this->all_board.sub(subboard_x, subboard_y);
                     for (int i = 0; i < 3; i++)
                         for (int j = 0; j < 3; j++)
                             if (subboard.state(i, j) == TA::BoardInterface::Tag::None)
                                 moves.emplace_back(std::make_pair(i + subboard_x * 3, j + subboard_y * 3));
+                }
         }
     }
 };
