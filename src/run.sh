@@ -8,6 +8,7 @@ if [[ "$#" -ne 2 ]]; then
     echo '  1: DummyAI' >&2
     echo '  2: RandomAI' >&2
     echo '  3: MinMaxAI' >&2
+    echo '  4: FirstWinAI' >&2
     echo ''
     echo 'Debug method:'
     echo '  $ ./run 2 1 > out'>&2
