@@ -12,6 +12,9 @@
 #elif AITYPE == 4
 #include "FirstWinAI.h"
 #define AI FirstWinAI
+#elif AITYPE == 5
+#include "ManualAI.h"
+#define AI ManualAI
 #else
 #include "AITemplate.h"
 #endif
