@@ -13,11 +13,6 @@
 #include <type_traits>
 #include <algorithm>
 
-// include AI
-#include <AITemplate/RandomAI.h>
-#include <AITemplate/FirstWinAI.h>
-// #include <AITemplate/MinMaxAI.h>
-
 namespace TA
 {
     using Tag = BoardInterface::Tag;
@@ -62,7 +57,7 @@ namespace TA
 
             while (!checkGameover())
             {
-                putToGui("[round] %d\n", round);
+                putToGui("Round: %d\n", round);
 
                 if (!playOneRound(first, tag, second))
                 {
@@ -209,7 +204,12 @@ namespace TA
             // `pos`: where user put the chess
             auto pos = call(&AIInterface::queryWhereToPut, user, MainBoard);
 
-            putToGui("[step]: (%d, %d)\n", pos.first, pos.second);
+            // set pos prompt
+            dynamic_cast<ASCII *>(gui)->setCurStep(pos);
+            if (tag == Tag::O)
+                putToGui("\033[33m[player O]: step at (%d, %d)\033[0m\n", pos.first, pos.second);
+            else if (tag == Tag::X)
+                putToGui("\033[31m[player X]: step at (%d, %d)\033[0m\n", pos.first, pos.second);
 
             // check whether `pos` is valid
             if (!isPutChessPosValid(pos))
