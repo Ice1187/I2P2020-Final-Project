@@ -27,6 +27,7 @@ namespace TA
 #define RED ESC "[31m"
 #define GREEN ESC "[32m"
 #define YELLOW ESC "[33m"
+#define BLUE ESC "[34m"
     class ASCII : public GUIInterface
     {
         const static int GRAPH_HIGHT = 7 + 15;
@@ -37,6 +38,8 @@ namespace TA
 
         std::string m_preparedText;
         std::string m_textbuf;
+
+        std::pair<int, int> cur_step;
 
         void cls()
         {
@@ -126,17 +129,22 @@ namespace TA
             BoardInterface::Tag t = b.get(x, y);
 
             std::string ret;
+
             switch (s)
             {
             case BoardInterface::Tag::O:
-                ret = YELLOW;
+                ret += YELLOW;
                 break;
             case BoardInterface::Tag::X:
-                ret = RED;
+                ret += RED;
                 break;
             default:
-                ret = RESET;
+                ret += "";
             }
+
+            if ((x == cur_step.first) && (y == cur_step.second))
+                ret += BOLD BLUE;
+
             switch (t)
             {
             case BoardInterface::Tag::O:
@@ -199,6 +207,12 @@ namespace TA
             }
 
             gotoxy(GRAPH_HIGHT + TEXT_HIGHT + 1, 0);
+        }
+
+        void setCurStep(std::pair<int, int> &pos)
+        {
+            cur_step.first = pos.first;
+            cur_step.second = pos.second;
         }
     };
 #undef ESC
