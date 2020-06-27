@@ -48,9 +48,9 @@ public:
     void init(bool order) override
     {
         // any way
-        std::cout << "Order: " << order << "\n";
-        if(order)
-            std::cout << "We are doing first Order!!\n";
+        // std::cout << "Order: " << order << "\n";
+        // if(order)
+        //     std::cout << "We are doing first Order!!\n";
         this->prev_x = this->prev_y = -1;
         this->board_x = this->board_y = 0;
 
@@ -83,23 +83,23 @@ public:
     }
     std::pair<int, int> FirstOrderStep(TA::Board sub_board, TA::UltraBoard main_board){
         std::pair<int, int> step(-1,-1);
-        std::cout << "prev: (" << this->prev_x << ", " << this->prev_y << ")\n";
-        std::cout << "sub_board we're going to: (" << this->board_x  << ", " << this->board_y << "\n";
+        // std::cout << "prev: (" << this->prev_x << ", " << this->prev_y << ")\n";
+        // std::cout << "sub_board we're going to: (" << this->board_x  << ", " << this->board_y << "\n";
         if (this->prev_x == -1 && this->prev_y == -1)
         {
             step = std::pair<int, int>(4, 4);
         }
         else if (!(sub_board.full()))
         {
-            std::cout << "sub board is not full\n";
+            // std::cout << "sub board is not full\n";
             // restrict in mid subboard
             if (this->firstOrderCounter != 7)
             {
-                std::cout << "haven't filled mid sub_board\n";
+                // std::cout << "haven't filled mid sub_board\n";
                 PrintState(sub_board.state(1, 1));
                 if (sub_board.state(1, 1) == TA::BoardInterface::Tag::None)
                 {
-                    std::cout << "take step at (1,1) of sub_board\n";
+                    // std::cout << "take step at (1,1) of sub_board\n";
                     this->firstOrderCounter++;
                     step = std::pair<int, int>(1, 1);
                 }
@@ -110,7 +110,7 @@ public:
             }
             else
             {
-                std::cout << "Start to make SameStep\n";
+                // std::cout << "Start to make SameStep\n";
                 if (SameStep == std::pair<int, int>(-1, -1))
                 {
                     step = US::getNextSubboardId(prev_x, prev_y);
@@ -134,11 +134,11 @@ public:
         else
         {
             // 只可能是第一個sameboard時引導至中間的subboard的情況
-            std::cout << "Full Case\n";
+            // std::cout << "Full Case\n";
             std::pair<int, int> subBoardIndex;
             subBoardIndex.first = 2 - SameStep.first;
             subBoardIndex.second = 2 - SameStep.second;
-            std::cout << "Next subBoardIindex (" << subBoardIndex.first << ", " << subBoardIndex.second << ")\n";
+            // std::cout << "Next subBoardIindex (" << subBoardIndex.first << ", " << subBoardIndex.second << ")\n";
             sub_board = main_board.sub(subBoardIndex.first, subBoardIndex.second);
             if (sub_board.state(SameStep.first, SameStep.second) == TA::BoardInterface::Tag::None)
             {
@@ -151,7 +151,7 @@ public:
             step.first += subBoardIndex.first * 3;
             step.second += subBoardIndex.second *3;
         }
-        std::cout << "Using first Order and now we are going to put at (" << step.first << ", " << step.second << ")\n";
+        // std::cout << "Using first Order and now we are going to put at (" << step.first << ", " << step.second << ")\n";
         return step;
     }
     // can only find the best step of given sub board
