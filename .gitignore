@@ -6,4 +6,5 @@ src/build/*
 !src/demo-binary/*
 
 .vscode/settings.json
+.vscode/c_cpp_properties.json
 *.pptx
