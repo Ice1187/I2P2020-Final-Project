@@ -2,10 +2,11 @@
 
 #include <UltraOOXX/Wrapper/AI.h>
 #include <UltraOOXX/UltraBoard.h>
-#include <useful/boardUtils.h>
+#include <useful/BoardUtils.h>
 #include <algorithm>
 #include <random>
 #include <ctime>
+#include <iostream>
 
 class RandomAI : public AIInterface
 {
@@ -16,7 +17,7 @@ public:
         this->order = order;
         this->board_x = 0;
         this->board_y = 0;
-        srand(time(NULL));
+        srand(clock());
     }
 
     void callbackReportEnemy(int x, int y) override
@@ -61,6 +62,7 @@ public:
             step.second += selectBoard_y * 3;
         }
 
+        std::cout << "Using Random now going to put at (" << step.first << ", " << step.second << ")\n";
         return step;
     }
 

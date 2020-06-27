@@ -2,7 +2,7 @@
 
 #include <UltraOOXX/Wrapper/AI.h>
 #include <UltraOOXX/UltraBoard.h>
-#include <useful/boardUtils.h>
+#include <useful/BoardUtils.h>
 #include <algorithm>
 #include <random>
 #include <ctime>
