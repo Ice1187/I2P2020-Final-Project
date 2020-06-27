@@ -13,12 +13,12 @@ if [[ "$#" -ne 2 ]]; then
     echo '  $ ./run 2 1 > out'>&2
     echo '  $ less -r out'
     echo '  (keep pressing f to see the output of every round)'
-    exit -1
-fi
 
-make AITYPE="AITYPE=$1" AI1
-make AITYPE="AITYPE=$2" AI2
-make gamerunner
+else
+    make AITYPE="AITYPE=$1" AI1
+    make AITYPE="AITYPE=$2" AI2
+    make gamerunner
+fi
 
 cd ./build/
 COLUMNS=150 ./gamerunner
