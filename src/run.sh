@@ -9,7 +9,7 @@ if [[ "$#" -ne 2 ]]; then
     echo '  2: RandomAI' >&2
     echo '  3: MinMaxAI' >&2
     echo '  4: FirstWinAI' >&2
-    echo '  5: ManualAI' >&2
+    echo '  5: ManualAI (need to change MAX_TIME in Game.h)' >&2
     echo ''
     echo 'Debug method:'
     echo '  $ ./run 2 1 > out'>&2
