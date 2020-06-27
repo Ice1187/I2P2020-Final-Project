@@ -62,6 +62,9 @@ namespace TA
 
             while (!checkGameover())
             {
+                putToGui("[round] %d\n", round);
+                putToGui("[debug] Gameover state: %d, MainBoard state: %d\n", checkGameover(), MainBoard.getWinTag());
+
                 if (!playOneRound(first, tag, second))
                 {
                     putToGui("[info] Fail to play this round!\n");
@@ -82,6 +85,7 @@ namespace TA
                 putToGui("\n");
             }
 
+            putToGui("[debug] final Gameover state: %d\n", checkGameover());
             // Gameover
             putToGui("[info] Gameover!\n");
             switch (this->MainBoard.getWinTag())
@@ -108,10 +112,15 @@ namespace TA
             if (board.getWinTag() != Tag::None)
                 return;
 
+            bool tie = true;
             Tag tags[3][3];
             for (int i = 0; i < 3; i++)
                 for (int j = 0; j < 3; j++)
+                {
                     tags[i][j] = board.state(i, j);
+                    if (tags[i][j] == Tag::None)
+                        tie = false;
+                }
 
             bool O_win = false;
             bool X_win = false;
@@ -169,12 +178,12 @@ namespace TA
                 X_win = true;
 
             // set wintag of board
-            if (O_win == true && X_win == true)
-                board.setWinTag(Tag::Tie);
-            else if (O_win == true)
+            if (O_win == true)
                 board.setWinTag(Tag::O);
             else if (X_win == true)
                 board.setWinTag(Tag::X);
+            else if (tie == true)
+                board.setWinTag(Tag::Tie);
             else
                 board.setWinTag(Tag::None);
         }
