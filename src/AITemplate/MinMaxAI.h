@@ -38,14 +38,8 @@ public:
         (void)x;
         (void)y;
         // give last step
-<<<<<<< Updated upstream
-
-        this->board_x = x % 3;
-        this->board_y = y % 3;
-=======
         this->prev_x = x;
         this->prev_y = y;
->>>>>>> Stashed changes
     }
 
     std::pair<int, int> queryWhereToPut(TA::UltraBoard main_board) override
