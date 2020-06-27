@@ -1,7 +1,9 @@
 #include <UltraOOXX/Wrapper/Porting.h>
 // #include "AITemplate.h"
-#include "DummyAI.h"
-#define AI DummyAI
+// #include "DummyAI.h"
+// #define AI DummyAI
+#include "MinMaxAI.h"
+#define AI FirstWinAI
 
 // Do not edit this!
 void* getai()

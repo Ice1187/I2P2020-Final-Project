@@ -13,8 +13,8 @@
 #include <algorithm>
 
 // include AI
-#include <AITemplate/DummyAI.h>
-
+// #include "AITemplate/DummyAI.h"
+#include "AITemplate/MinMaxAI.h"
 namespace TA
 {
     using Tag = BoardInterface::Tag;
@@ -202,6 +202,7 @@ namespace TA
             auto pos = call(&AIInterface::queryWhereToPut, user, MainBoard);
 
             // check whether `pos` is valid
+            putToGui("put (%d, %d)\n");
             if (!isPutChessPosValid(pos))
                 return false;
 
