@@ -2,7 +2,7 @@
 
 #include <UltraOOXX/Wrapper/AI.h>
 #include <UltraOOXX/UltraBoard.h>
-#include <useful/boardUtils.h>
+#include <useful/BoardUtils.h>
 #include <algorithm>
 #include <random>
 #include <ctime>
@@ -61,7 +61,7 @@ public:
             step.first += selectBoard_x * 3;
             step.second += selectBoard_y * 3;
         }
-        
+
         std::cout << "Using Random now going to put at (" << step.first << ", " << step.second << ")\n";
         return step;
     }

@@ -2,13 +2,11 @@
 
 #include <UltraOOXX/Wrapper/AI.h>
 #include <UltraOOXX/UltraBoard.h>
-#include <useful/boardUtils.h>
-
+#include <useful/BoardUtils.h>
 
 // #include "../UltraOOXX/Wrapper/AI.h"
 // #include "../UltraOOXX/UltraBoard.h"
 // #include "../useful/boardUtils.h>
-
 
 #include <algorithm>
 #include <random>
@@ -76,13 +74,15 @@ public:
         TA::Board sub_board;
 
         sub_board = main_board.sub(this->board_x, this->board_y);
-        if(this->firstOrder){
+        if (this->firstOrder)
+        {
             step = this->FirstOrderStep(sub_board, main_board);
         }
         return step;
     }
-    std::pair<int, int> FirstOrderStep(TA::Board sub_board, TA::UltraBoard main_board){
-        std::pair<int, int> step(-1,-1);
+    std::pair<int, int> FirstOrderStep(TA::Board sub_board, TA::UltraBoard main_board)
+    {
+        std::pair<int, int> step(-1, -1);
         // std::cout << "prev: (" << this->prev_x << ", " << this->prev_y << ")\n";
         // std::cout << "sub_board we're going to: (" << this->board_x  << ", " << this->board_y << "\n";
         if (this->prev_x == -1 && this->prev_y == -1)
@@ -103,7 +103,8 @@ public:
                     this->firstOrderCounter++;
                     step = std::pair<int, int>(1, 1);
                 }
-                else {
+                else
+                {
                     std::cout << "[err] sub_board[1, 1] tag is not Tag::None\n";
                     throw "[err] sub_board[1, 1] tag is not Tag::None\n";
                 }
@@ -149,7 +150,7 @@ public:
                 step = std::pair<int, int>(2 - SameStep.first, 2 - SameStep.second);
             }
             step.first += subBoardIndex.first * 3;
-            step.second += subBoardIndex.second *3;
+            step.second += subBoardIndex.second * 3;
         }
         // std::cout << "Using first Order and now we are going to put at (" << step.first << ", " << step.second << ")\n";
         return step;

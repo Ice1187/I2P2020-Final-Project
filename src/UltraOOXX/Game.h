@@ -3,7 +3,7 @@
 #include <UltraOOXX/UltraBoard.h>
 #include <UltraOOXX/Wrapper/AI.h>
 #include <GUI/GUIInterface.h>
-#include <useful/boardUtils.h>
+#include <useful/BoardUtils.h>
 
 #include <iostream>
 #include <cassert>
@@ -311,7 +311,7 @@ namespace TA
         // self added variables
         std::pair<int, int> prev_pos;
 
-        int m_size;
+        // int m_size;
         std::vector<int> m_ship_size;
         std::chrono::milliseconds m_runtime_limit;
 
