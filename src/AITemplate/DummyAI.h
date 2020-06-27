@@ -12,6 +12,7 @@ public:
     void init(bool order) override
     {
         // any way
+        this->order = order;
         this->prev_x = 0;
         this->prev_y = 0;
     }
@@ -30,14 +31,16 @@ public:
     std::pair<int, int> queryWhereToPut(TA::UltraBoard main_board) override
     {
         std::pair<int, int> step(-1, -1);
-        TA::Board sub_board;
+        std::pair<int, int> target_board_id(prev_x % 3, prev_y % 3);
+        TA::Board target_board;
 
-        sub_board = main_board.sub(prev_x / 3, prev_y / 3);
-        if (!(sub_board.full()))
+        target_board = main_board.sub(target_board_id.first, target_board_id.second);
+
+        if (!(target_board.full()))
         {
-            step = findStep(sub_board);
-            step.first += (prev_x / 3) * 3;
-            step.second += (prev_y / 3) * 3;
+            step = findStep(target_board);
+            step.first += target_board_id.first * 3;
+            step.second += target_board_id.second * 3;
         }
         else
         {
@@ -45,10 +48,10 @@ public:
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    sub_board = main_board.sub(i, j);
-                    if (!(sub_board.full()))
+                    target_board = main_board.sub(i, j);
+                    if (!(target_board.full()))
                     {
-                        step = findStep(sub_board);
+                        step = findStep(target_board);
                         step.first += i * 3;
                         step.second += j * 3;
                         break;
@@ -73,4 +76,5 @@ public:
 
 private:
     int prev_x, prev_y;
+    int order;
 };

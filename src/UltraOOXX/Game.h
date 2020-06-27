@@ -76,6 +76,7 @@ namespace TA
                 std::swap(first, second);
                 tag = (tag == Tag::O) ? Tag::X : Tag::O;
                 round++;
+                putToGui("\n");
             }
 
             // Gameover
@@ -184,9 +185,9 @@ namespace TA
 
             // check if pos follows the prev pos restrict rule
             if (prev_x >= 0 && prev_y >= 0)
-                if (!this->MainBoard.sub(prev_x / 3, prev_y / 3).full())
-                    if (!(prev_x / 3 * 3 <= pos_x && pos_x < prev_x / 3 * 3 + 3 &&
-                          prev_y / 3 * 3 <= pos_y && pos_y < prev_y / 3 * 3 + 3))
+                if (!this->MainBoard.sub(prev_x % 3, prev_y % 3).full())
+                    if (!(prev_x % 3 * 3 <= pos_x && pos_x < prev_x % 3 * 3 + 3 &&
+                          prev_y % 3 * 3 <= pos_y && pos_y < prev_y % 3 * 3 + 3))
                         return false;
 
             // check `pos` is empty
