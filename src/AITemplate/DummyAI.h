@@ -2,6 +2,7 @@
 
 #include <UltraOOXX/Wrapper/AI.h>
 #include <UltraOOXX/UltraBoard.h>
+#include <useful/boardUtils.h>
 #include <algorithm>
 #include <random>
 #include <ctime>
@@ -31,16 +32,16 @@ public:
     std::pair<int, int> queryWhereToPut(TA::UltraBoard main_board) override
     {
         std::pair<int, int> step(-1, -1);
-        std::pair<int, int> target_board_id(prev_x % 3, prev_y % 3);
+        auto [targetBoard_x, targetBoard_y] = US::getNextSubboardId(prev_x, prev_y);
         TA::Board target_board;
 
-        target_board = main_board.sub(target_board_id.first, target_board_id.second);
+        target_board = main_board.sub(targetBoard_x, targetBoard_y);
 
         if (!(target_board.full()))
         {
             step = findStep(target_board);
-            step.first += target_board_id.first * 3;
-            step.second += target_board_id.second * 3;
+            step.first += targetBoard_x * 3;
+            step.second += targetBoard_y * 3;
         }
         else
         {
