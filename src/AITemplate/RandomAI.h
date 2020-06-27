@@ -17,7 +17,7 @@ public:
         this->order = order;
         this->board_x = 0;
         this->board_y = 0;
-        srand(time(NULL));
+        srand(clock());
     }
 
     void callbackReportEnemy(int x, int y) override
