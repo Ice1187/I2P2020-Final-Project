@@ -13,6 +13,8 @@
 #include <type_traits>
 #include <algorithm>
 
+#define MAX_TIME 1000000
+
 namespace TA
 {
     using Tag = BoardInterface::Tag;
@@ -21,10 +23,10 @@ namespace TA
     {
     public:
         UltraOOXX(
-            std::chrono::milliseconds runtime_limit = std::chrono::milliseconds(1000)) : m_runtime_limit(runtime_limit),
-                                                                                         m_P1(nullptr),
-                                                                                         m_P2(nullptr),
-                                                                                         MainBoard()
+            std::chrono::milliseconds runtime_limit = std::chrono::milliseconds(MAX_TIME)) : m_runtime_limit(runtime_limit),
+                                                                                             m_P1(nullptr),
+                                                                                             m_P2(nullptr),
+                                                                                             MainBoard()
         {
             gui = new ASCII;
         }
