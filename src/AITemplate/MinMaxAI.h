@@ -2,6 +2,7 @@
 
 #include <UltraOOXX/Wrapper/AI.h>
 #include <UltraOOXX/UltraBoard.h>
+#include <useful/boardUtils.h>
 #include <algorithm>
 #include <random>
 #include <ctime>
@@ -25,8 +26,9 @@ public:
         (void)x;
         (void)y;
         // give last step
-        this->board_x = x / 3;
-        this->board_y = y / 3;
+
+        this->board_x = x % 3;
+        this->board_y = y % 3;
     }
 
     std::pair<int, int> queryWhereToPut(TA::UltraBoard main_board) override
