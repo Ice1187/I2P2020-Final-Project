@@ -9,6 +9,9 @@
 #elif AITYPE == 3
 #include "MinMaxAI.h"
 #define AI MinMaxAI
+#elif AITYPE == 4
+#include "FirstWinAI.h"
+#define AI FirstWinAI
 #else
 #include "AITemplate.h"
 #endif

@@ -48,9 +48,11 @@ public:
     void init(bool order) override
     {
         // any way
+        std::cout << "Order: " << order << "\n";
         if(order)
             std::cout << "We are doing first Order!!\n";
-        this->prev_x = this->prev_y = this->board_x = this->board_y = 0;
+        this->prev_x = this->prev_y = -1;
+        this->board_x = this->board_y = 0;
 
         this->firstOrder = order;
         this->firstOrderCounter = 0;
@@ -64,8 +66,8 @@ public:
         // give last step
         this->prev_x = x;
         this->prev_y = y;
-        this->board_x = x / 3;
-        this->board_y = y / 3;
+        this->board_x = x % 3;
+        this->board_y = y % 3;
     }
 
     std::pair<int, int> queryWhereToPut(TA::UltraBoard main_board) override
@@ -122,7 +124,7 @@ public:
                     }
                     else
                     {
-                        step = std::pair<int, int>(3 - SameStep.first, 3 - SameStep.second);
+                        step = std::pair<int, int>(2 - SameStep.first, 2 - SameStep.second);
                     }
                 }
             }
@@ -132,9 +134,11 @@ public:
         else
         {
             // 只可能是第一個sameboard時引導至中間的subboard的情況
-            std::pair<int, int> subBoardIndex = US::getNextSubboardId(prev_x, prev_y);
-            subBoardIndex.first = 3 - subBoardIndex.first;
-            subBoardIndex.second = 3 - subBoardIndex.second;
+            std::cout << "Full Case\n";
+            std::pair<int, int> subBoardIndex;
+            subBoardIndex.first = 2 - SameStep.first;
+            subBoardIndex.second = 2 - SameStep.second;
+            std::cout << "Next subBoardIindex (" << subBoardIndex.first << ", " << subBoardIndex.second << ")\n";
             sub_board = main_board.sub(subBoardIndex.first, subBoardIndex.second);
             if (sub_board.state(SameStep.first, SameStep.second) == TA::BoardInterface::Tag::None)
             {
@@ -142,7 +146,7 @@ public:
             }
             else
             {
-                step = std::pair<int, int>(3 - SameStep.first, 3 - SameStep.second);
+                step = std::pair<int, int>(2 - SameStep.first, 2 - SameStep.second);
             }
             step.first += subBoardIndex.first * 3;
             step.second += subBoardIndex.second *3;
