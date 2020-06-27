@@ -36,11 +36,14 @@ namespace TA
         void cls()
         {
             printf(ESC "[H" ESC "[J");
+            // ESC [H: move cursor to top-left
+            // ESC [J: erzse display
         }
 
         void gotoxy(int y, int x)
         {
-            printf(ESC "\033[%d;%df", y, x);
+            printf(ESC "[%d;%df", y, x);
+            // ESC [<x>;<y>f: move cursor
         }
 
         void updateTextBuf()
@@ -83,13 +86,14 @@ namespace TA
         {
             cls();
             puts(
-                R"( _   _ _ _             _____  _______   ____   __
+                ESC "[1m" ESC "[32m"
+                    R"( _   _ _ _             _____  _______   ____   __
 | | | | | |           |  _  ||  _  \ \ / /\ \ / /
 | | | | | |_ _ __ __ _| | | || | | |\ V /  \ V /
 | | | | | __| '__/ _` | | | || | | |/   \  /   \
 | |_| | | |_| | | (_| \ \_/ /\ \_/ / /^\ \/ /^\ \
  \___/|_|\__|_|  \__,_|\___/  \___/\/   \/\/   \/
-)");
+)" ESC "[0m");
         }
 
         virtual void appendText(std::string str) override
@@ -112,6 +116,64 @@ namespace TA
             }
         }
 
+        std::string toColorChar(UltraBoard b, int x, int y)
+        {
+            BoardInterface::Tag s = b.state(x / 3, y / 3);
+            BoardInterface::Tag t = b.get(x, y);
+
+            std::string ret;
+            switch (s)
+            {
+            case BoardInterface::Tag::O:
+                ret = ESC "[33m";
+                break;
+            case BoardInterface::Tag::X:
+                ret = ESC "[31m";
+                break;
+            default:
+                ret = ESC "[0m";
+            }
+            switch (t)
+            {
+            case BoardInterface::Tag::O:
+                ret += "O";
+                break;
+            case BoardInterface::Tag::X:
+                ret += "X";
+                break;
+            default:
+                ret += " ";
+            }
+
+            ret += ESC "[0m";
+            return ret;
+        }
+
+        // virtual void updateGame(UltraBoard b) override
+        // {
+        //     gotoxy(7 + 1, 0);
+        //     const std::string buf(20, ' ');
+
+        //     for (int i = 0; i < 9; ++i)
+        //     {
+        //         std::printf("%s", buf.c_str());
+        //         for (int j = 0; j < 9; ++j)
+        //         {
+        //             std::putchar(toPrintChar(b.get(i, j)));
+        //             if (j == 2 || j == 5)
+        //                 std::putchar('|');
+        //         }
+        //         std::putchar('\n');
+        //         if (i == 2 || i == 5)
+        //         {
+        //             std::printf("%s", buf.c_str());
+        //             std::puts(std::string(12, '-').c_str());
+        //         }
+        //     }
+
+        //     gotoxy(GRAPH_HIGHT + TEXT_HIGHT + 1, 0);
+        // }
+
         virtual void updateGame(UltraBoard b) override
         {
             gotoxy(7 + 1, 0);
@@ -122,7 +184,7 @@ namespace TA
                 std::printf("%s", buf.c_str());
                 for (int j = 0; j < 9; ++j)
                 {
-                    std::putchar(toPrintChar(b.get(i, j)));
+                    std::printf("%s", toColorChar(b, i, j).c_str());
                     if (j == 2 || j == 5)
                         std::putchar('|');
                 }
