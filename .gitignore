@@ -8,3 +8,5 @@ src/build/*
 out 
 .vscode/*
 *.pptx
+.DS_Store
+tmp*
