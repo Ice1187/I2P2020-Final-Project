@@ -15,6 +15,9 @@
 #elif AITYPE == 5
 #include "ManualAI.h"
 #define AI ManualAI
+#elif AITYPE == 6
+#include "FwSmmAI.h" // First-Win and Secone-MinMax AI
+#define AI FwSmmAI
 #else
 #include "AITemplate.h"
 #endif

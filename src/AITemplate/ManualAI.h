@@ -4,7 +4,7 @@
 #include <UltraOOXX/UltraBoard.h>
 #include <useful/BoardUtils.h>
 #include <algorithm>
-
+#include <cstdio>
 class ManualAI : public AIInterface
 {
 public:
