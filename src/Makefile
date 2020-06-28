@@ -15,10 +15,10 @@ gamerunner:
 	$(CXX) $(CXXFLAG) $(BONUS) -I$(GMAEINCLUDE) -pthread main.cpp -o ${BUILDDIR}/gamerunner -ldl
 
 AI1:
-	$(CXX) $(CXXFLAG) $(BONUS) -D$(AITYPE) -I$(GMAEINCLUDE) -shared AITemplate/tmpPorting.cpp -o ${BUILDDIR}/a1.so
+	$(CXX) $(CXXFLAG) $(BONUS) -D$(AITYPE) -I$(GMAEINCLUDE) -shared AITemplate/TmpPorting.cpp -o ${BUILDDIR}/a1.so
 
 AI2:
-	$(CXX) $(CXXFLAG) $(BONUS) -D$(AITYPE) -I$(GMAEINCLUDE) -shared AITemplate/tmpPorting.cpp -o ${BUILDDIR}/a2.so
+	$(CXX) $(CXXFLAG) $(BONUS) -D$(AITYPE) -I$(GMAEINCLUDE) -shared AITemplate/TmpPorting.cpp -o ${BUILDDIR}/a2.so
 
 .PHONY: clean
 clean:

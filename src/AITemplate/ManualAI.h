@@ -4,7 +4,7 @@
 #include <UltraOOXX/UltraBoard.h>
 #include <useful/BoardUtils.h>
 #include <algorithm>
-
+#include <cstdio>
 class ManualAI : public AIInterface
 {
 public:
@@ -46,8 +46,10 @@ public:
         //     return step;
         // }
 
-        while (!isValid(step, mainBoard))
-            scanf("%d %d", &(step.first), &(step.second));
+        while (!isValid(step, mainBoard)){
+            int a = scanf("%d %d", &(step.first), &(step.second));
+            a++;
+        }
 
         return step;
     }
