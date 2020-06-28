@@ -12,12 +12,140 @@
 #include <future>
 #include <type_traits>
 #include <algorithm>
-
+// for human
+// #define MAX_TIME 100000000
+// for computer
 #define MAX_TIME 1000000
 
 namespace TA
 {
     using Tag = BoardInterface::Tag;
+    bool addWinTag(const std::pair<int, int> &pos, TA::BoardInterface &board)
+    {
+        if (board.getWinTag() != Tag::None)
+            return false;
+
+        const int &pos_x = pos.first;
+        const int &pos_y = pos.second;
+
+        // horizontal
+        if (board.state(pos_x, pos_y) == board.state((pos_x + 1) % 3, pos_y) &&
+            board.state(pos_x, pos_y) == board.state((pos_x + 2) % 3, pos_y))
+        {
+            board.setWinTag(board.state(pos_x, pos_y));
+            return true;
+        }
+
+        // vertical
+        if (board.state(pos_x, pos_y) == board.state(pos_x, (pos_y + 1) % 3) &&
+            board.state(pos_x, pos_y) == board.state(pos_x, (pos_y + 2) % 3))
+        {
+            board.setWinTag(board.state(pos_x, pos_y));
+            return true;
+        }
+
+        // diagonal
+        if (pos_x == pos_y &&
+            board.state(pos_x, pos_y) == board.state((pos_x + 1) % 3, (pos_y + 1) % 3) &&
+            board.state(pos_x, pos_y) == board.state((pos_x + 2) % 3, (pos_y + 2) % 3))
+        {
+            board.setWinTag(board.state(pos_x, pos_y));
+            return true;
+        }
+
+        // subdiagonal
+        if ((pos_x + pos_y) == 2 &&
+            board.state(pos_x, pos_y) == board.state((pos_x + 2) % 3, (pos_y + 1) % 3) &&
+            board.state(pos_x, pos_y) == board.state((pos_x + 1) % 3, (pos_y + 2) % 3))
+        {
+            board.setWinTag(board.state(pos_x, pos_y));
+            return true;
+        }
+
+        return false;
+    }
+    bool addSubboardWinTag(const std::pair<int, int> &pos, TA::Board &board)
+    {
+        if (addWinTag(pos, board))
+            return true;
+        if (board.full())
+            board.setWinTag(Tag::Tie);
+        return false;
+    }
+    bool addAllboardWinTag(const std::pair<int, int> &pos, TA::UltraBoard &board)
+    {
+        if (addWinTag(pos, board))
+            return true;
+        return false;
+    }
+
+    bool removeWinTag(TA::BoardInterface &board)
+    {
+        if (board.getWinTag() == Tag::None)
+            return false;
+        if (board.getWinTag() == Tag::Tie)
+        {
+            board.setWinTag(Tag::None);
+            return false;
+        }
+
+        // if win_lines >= 1,  wintag remain no change.
+        int win_lines = 0;
+
+        // horizontal
+        for (int i = 0; i < 3; i++)
+        {
+            if (board.state(i, 0) == Tag::O &&
+                board.state(i, 1) == Tag::O &&
+                board.state(i, 2) == Tag::O)
+                win_lines += 1;
+            if (board.state(i, 0) == Tag::X &&
+                board.state(i, 1) == Tag::X &&
+                board.state(i, 2) == Tag::X)
+                win_lines += 1;
+        }
+
+        // vertical
+        for (int j = 0; j < 3; j++)
+        {
+            if (board.state(0, j) == Tag::O &&
+                board.state(1, j) == Tag::O &&
+                board.state(2, j) == Tag::O)
+                win_lines += 1;
+            if (board.state(0, j) == Tag::X &&
+                board.state(1, j) == Tag::X &&
+                board.state(2, j) == Tag::X)
+                win_lines += 1;
+        }
+
+        // diagonal
+        if (board.state(0, 0) == Tag::O &&
+            board.state(1, 1) == Tag::O &&
+            board.state(2, 2) == Tag::O)
+            win_lines += 1;
+        if (board.state(0, 0) == Tag::X &&
+            board.state(1, 1) == Tag::X &&
+            board.state(2, 2) == Tag::X)
+            win_lines += 1;
+
+        // subdiagonal
+        if (board.state(0, 2) == Tag::O &&
+            board.state(1, 1) == Tag::O &&
+            board.state(2, 0) == Tag::O)
+            win_lines += 1;
+        if (board.state(0, 2) == Tag::X &&
+            board.state(1, 1) == Tag::X &&
+            board.state(2, 0) == Tag::X)
+            win_lines += 1;
+
+        if (win_lines == 0)
+        {
+            board.setWinTag(Tag::None);
+            return true;
+        }
+
+        return false;
+    }
 
     class UltraOOXX
     {
@@ -219,8 +347,10 @@ namespace TA
 
             // put the chess
             MainBoard.get(pos.first, pos.second) = tag;
-            updateBoardWinTag(MainBoard.sub(pos.first / 3, pos.second / 3));
-
+            // updateBoardWinTag(MainBoard.sub(pos.first / 3, pos.second / 3));
+            if(addSubboardWinTag(std::make_pair(pos.first % 3, pos.second % 3), MainBoard.sub(pos.first / 3, pos.second / 3)))
+                addAllboardWinTag(std::make_pair(pos.first / 3, pos.second / 3), MainBoard);
+    
             // callback enemy
             enemy->callbackReportEnemy(pos.first, pos.second);
             // callback UltraOOXX
@@ -323,4 +453,5 @@ namespace TA
 
         UltraBoard MainBoard;
     };
+    
 } // namespace TA
