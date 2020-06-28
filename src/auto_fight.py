@@ -12,6 +12,7 @@ command = "./run.sh"
 result = []
 rounds = int(input('[+] enter rounds: '))
 
+
 o_win = 0
 x_win = 0
 tie = 0
@@ -23,7 +24,7 @@ end_time = time.time()
 
 for i in range(0, rounds):
     result.append(subprocess.run(
-        [command], stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=2))
+        [command], stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=2, shell=False))
     if(i % 500 == 0):
         end_time = time.time()
         print("[-] Round {} ({:.2f}s)".format(i, end_time - start_time))
