@@ -17,7 +17,7 @@ There are 6 AIs in `src/AITemplate/`. Every AI has it's own strategy to take ste
 - FirstWinAI: Can only play when it's first-move, but always win while first-move.
 - ManualAI: Human Player Mode. Needs the player to enter every step.
 - MinMaxAI: Using MiniMax Algorithm + Alpha-beta Pruning as it's step strategy. Our best AI in second-move.
-- FwSmmAI: First-Win Second-MiniMax AI. Combine FirstWinAI and MinMaxAI, out final AI.
+- FwSmmAI: First-Win Second-MiniMax AI. Combine FirstWinAI and MinMaxAI, our final AI.
 
 ## Compile
 
