@@ -17,10 +17,10 @@ if [[ "$#" -ne 2 ]]; then
       $ less -r out
       (keep pressing f to see the output of every round)
     '>&2
-# else
-    # make AITYPE="AITYPE=$1" AI1
-    # make AITYPE="AITYPE=$2" AI2
-    # make gamerunner
+else
+    make AITYPE="AITYPE=$1" AI1
+    make AITYPE="AITYPE=$2" AI2
+    make gamerunner
 fi
 
 cd ./build/

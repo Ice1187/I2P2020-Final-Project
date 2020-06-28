@@ -8,7 +8,7 @@ print("""
 This script run `./run.sh`, so make sure you have compiled the program and had correct `a1.so`, `a2.so`, and `gamerunner` in `./build`.
 """)
 
-command = "./run.sh"
+command = "./auto_fight.sh"
 result = []
 rounds = int(input('[+] enter rounds: '))
 
@@ -24,8 +24,8 @@ end_time = time.time()
 
 for i in range(1, rounds+1):
     result.append(subprocess.run(
-        [command], stdout=subprocess.PIPE, stderr=subprocess.PIPE))
-    if(i % 10 == 0):
+        [command], stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=2, shell=True))
+    if(i % 100 == 0):
         print("[-] Round {} ({:.2f}s)".format(i, time.time() - end_time))
         end_time = time.time()
         
