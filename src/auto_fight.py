@@ -43,7 +43,7 @@ for r in result:
         else:
             unknown += 1
     else:
-        fail = 0
+        fail += 0
 
 winer = max(o_win, x_win, tie)
 
