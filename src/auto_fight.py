@@ -9,7 +9,7 @@ This script run `./run.sh`, so make sure you have compiled the program and had c
 """)
 
 command = "./run.sh"
-result = set()
+result = []
 rounds = int(input('[+] enter rounds: '))
 
 o_win = 0
@@ -19,10 +19,16 @@ unknown = 0
 fail = 0
 
 start_time = time.time()
+end_time = time.time()
 
 for i in range(0, rounds):
-    result.add(subprocess.run(
-        [command], stdout=subprocess.PIPE, stderr=subprocess.PIPE))
+    result.append(subprocess.run(
+        [command], stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=2))
+    if(i % 500 == 0):
+        end_time = time.time()
+        print("[-] Round {} ({:.2f}s)".format(i, end_time - start_time))
+
+end_time = time.time()
 
 for r in result:
     if r.returncode == 0:
@@ -37,8 +43,6 @@ for r in result:
             unknown += 1
     else:
         fail = 0
-
-end_time = time.time()
 
 winer = max(o_win, x_win, tie)
 
