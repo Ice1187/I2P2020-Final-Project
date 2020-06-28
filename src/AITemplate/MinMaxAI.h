@@ -14,11 +14,24 @@ class MinMaxAI : public AIInterface
 {
 private:
     using Tag = TA::BoardInterface::Tag;
-    std::map<Tag, const int> tag2contrib = {
-        {Tag::O, 2},
-        {Tag::X, 0},
-        {Tag::Tie, 1},
-        {Tag::None, 1},
+    std::map<Tag, const int> tag2num = {
+        {Tag::O, 1},
+        {Tag::X, -1},
+        {Tag::Tie, 0},
+        {Tag::None, 0},
+    };
+    enum
+    {
+        O_LINE,
+        X_LINE,
+        O_BLOCKED,
+        X_BLOCKED,
+        O_TWO,
+        X_TWO,
+        O_ONE,
+        X_ONE,
+        TIE,
+        EMPTY_1O1X
     };
     const int w_corner = 3;
     const int w_side = 2;
@@ -164,9 +177,10 @@ private:
 
     void putChess(const std::pair<int, int> &pos, bool player)
     {
+        // std::cout << "\nput chess: (" << pos.first << ", " << pos.second << ") " << (player ? "O" : "X") << '\n';
         if (this->all_board.get(pos.first, pos.second) != Tag::None)
         {
-            std::cout << "minmax pos is not None\n";
+            // std::cout << "minmax pos is not None\n";
             throw "error";
         }
 
@@ -178,9 +192,11 @@ private:
     }
     void removeChess(const std::pair<int, int> &pos, bool player)
     {
+        // std::cout << "rm  chess: (" << pos.first << ", " << pos.second << ") " << (player ? "O" : "X") << "\n\n";
+
         if (this->all_board.get(pos.first, pos.second) != player2tag(player))
         {
-            std::cout << "you don't own the chess, so you can't remove it\n";
+            // std::cout << "you don't own the chess, so you can't remove it\n";
             throw "error";
         }
 
@@ -191,58 +207,134 @@ private:
             removeWinTag(this->all_board);
     }
 
-    int evalPoint(const std::pair<int, int> &pos, TA::BoardInterface &board)
+    int line_cond(const Tag &t1, const Tag &t2, const Tag &t3)
     {
-        const int &pos_x = pos.first;
-        const int &pos_y = pos.second;
-        int ret = 0;
-        int on_diagonals = 0;
+        const int &n1 = tag2num[t1];
+        const int &n2 = tag2num[t2];
+        const int &n3 = tag2num[t3];
+        const int line_cond = n1 + n2 + n3;
 
-        // horizontal
-        ret += tag2contrib[board.state((pos_x + 1) % 3, pos_y)];
-        ret += tag2contrib[board.state((pos_x + 2) % 3, pos_y)];
+        bool contain_tie = (t1 == Tag::Tie || t2 == Tag::Tie || t3 == Tag::Tie);
 
-        // vertical
-        ret += tag2contrib[board.state(pos_x, (pos_y + 1) % 3)];
-        ret += tag2contrib[board.state(pos_x, (pos_y + 2) % 3)];
+        // if contain tie
+        if (contain_tie)
+            return TIE;
 
-        // diagonal
-        if (pos_x == pos_y)
+        // three the same
+        else if (line_cond == 3)
+            return O_LINE;
+        else if (line_cond == -3)
+            return X_LINE;
+
+        // two O/X one empty
+        else if (line_cond == 2)
+            return O_TWO;
+        else if (line_cond == -2)
+            return X_TWO;
+
+        // block enemy
+        else if (line_cond == 1 && (n1 != 0 && n2 != 0 && n3 != 0)) // blcok by order = 0;
+            return O_BLOCKED;
+        else if (line_cond == -1 && (n1 != 0 && n2 != 0 && n3 != 0))
+            return X_BLOCKED;
+
+        // one O/X two empty
+        else if (line_cond == 1)
+            return O_ONE;
+        else if (line_cond == -1)
+            return X_ONE;
+
+        else if (line_cond == 0)
+            return EMPTY_1O1X;
+
+        return 0;
+    }
+
+    int evalAllboardLine(const Tag &t1, const Tag &t2, const Tag &t3)
+    {
+        const int cond = line_cond(t1, t2, t3);
+
+        switch (cond)
         {
-            ret += tag2contrib[board.state((pos_x + 1) % 3, (pos_y + 1) % 3)];
-            ret += tag2contrib[board.state((pos_x + 2) % 3, (pos_y + 2) % 3)];
-            on_diagonals += 1;
+        case O_LINE:
+            return 1200;
+        case X_LINE:
+            return -1200;
+        case O_BLOCKED:
+            return -1000;
+        case X_BLOCKED:
+            return 1000;
+        case O_TWO:
+            return 600;
+        case X_TWO:
+            return -600;
+        case O_ONE:
+            return 300;
+        case X_ONE:
+            return -300;
+        case TIE:
+        case EMPTY_1O1X:
+            return 0;
         }
+        return 0;
+    }
 
-        // subdiagonal
-        if ((pos_x + pos_y) == 2)
+    int evalSubboardLine(const Tag &t1, const Tag &t2, const Tag &t3)
+    {
+        const int cond = line_cond(t1, t2, t3);
+        switch (cond)
         {
-            ret += tag2contrib[board.state((pos_x + 2) % 3, (pos_y + 1) % 3)];
-            ret += tag2contrib[board.state((pos_x + 1) % 3, (pos_y + 2) % 3)];
-            on_diagonals += 1;
+        case O_LINE:
+            return 120;
+        case X_LINE:
+            return -120;
+        case O_BLOCKED:
+            return -100;
+        case X_BLOCKED:
+            return 100;
+        case O_TWO:
+            return 60;
+        case X_TWO:
+            return -60;
+        case O_ONE:
+            return 30;
+        case X_ONE:
+            return -30;
+        case TIE:
+        case EMPTY_1O1X:
+            return 0;
         }
-
-        if (on_diagonals == 2)
-            ret *= w_center;
-        else if (on_diagonals == 1)
-            ret *= w_corner;
-        else
-            ret *= w_side;
-        return ret;
+        return 0;
     }
 
     int evalSubboard(TA::BoardInterface &board)
     {
-        int cnt = 1;
         int ret = 0;
+        Tag tags[3][3];
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
-                if (board.state(i, j) == Tag::None)
-                {
-                    ret += evalPoint(std::make_pair(i, j), board);
-                    ++cnt;
-                }
-        return ret / cnt;
+            {
+                tags[i][j] = board.state(i, j);
+                if (i + j == 2 && i == 1)
+                    ret += tag2num[tags[i][j]] * 4;
+                else if (i + j == 2 || i + j == 0)
+                    ret += tag2num[tags[i][j]] * 3;
+                else if (i + j == 1 || i + j == 3)
+                    ret += tag2num[tags[i][j]] * 2;
+            }
+
+        // horizontal, vertical
+        for (int i = 0; i < 3; i++)
+        {
+            ret += evalSubboardLine(tags[i][0], tags[i][1], tags[i][2]);
+            ret += evalSubboardLine(tags[0][i], tags[1][i], tags[2][i]);
+        }
+
+        // diagonal, subdiagonal
+        ret += evalSubboardLine(tags[0][0], tags[1][1], tags[2][2]);
+        ret += evalSubboardLine(tags[2][0], tags[1][1], tags[0][2]);
+
+        return ret;
     }
 
 public:
@@ -250,7 +342,7 @@ public:
     init(bool order) override
     {
         // any way
-        this->prev_x = this->prev_y = 0;
+        this->prev_x = this->prev_y = 4;
         this->order = order;
         srand(time(nullptr));
     }
@@ -266,7 +358,7 @@ public:
 
     std::pair<int, int> queryWhereToPut(TA::UltraBoard main_board) override
     {
-        int depth = 6;
+        int depth = 5;
         this->all_board = main_board;
         int subboard_x = this->prev_x % 3;
         int subboard_y = this->prev_y % 3;
@@ -288,6 +380,7 @@ public:
                     {
                         cur_step.second = j + subboard_y * 3;
                         eval = minmax(cur_step, depth, -INF, INF, this->order);
+                        // std::cout << "step (" << cur_step.first << ", " << cur_step.second << ")  val: " << eval << ")\n";
                         if (this->order == true && eval > maxEval)
                         {
                             best_step = cur_step;
@@ -317,6 +410,7 @@ public:
                             {
                                 cur_step.second = j + subboard_y * 3;
                                 eval = minmax(cur_step, depth, -INF, INF, this->order);
+                                // std::cout << "step (" << cur_step.first << ", " << cur_step.second << ")  val: " << eval << ")\n";
                                 if (this->order == true && eval > maxEval)
                                 {
                                     best_step = cur_step;
@@ -341,6 +435,7 @@ public:
         {
             putChess(pos, player);
             int ret = evalPos();
+            // std::cout << "pos " << "(" << pos.first << ", " << pos.second << ") : " << ret << '\n';
             removeChess(pos, player);
             return ret;
         }
@@ -349,7 +444,7 @@ public:
         {
             putChess(pos, player);
 
-            int eval = 0;
+            int eval;
             int maxEval = -INF;
 
             std::vector<std::pair<int, int>> enemyMoves;
@@ -357,6 +452,8 @@ public:
             for (std::pair<int, int> pos : enemyMoves)
             {
                 eval = minmax(pos, depth - 1, alpha, beta, !player);
+                // std::cout << "step (" << pos.first << ", " << pos.second << ")  val: " << eval << ")\n";
+
                 maxEval = std::max(maxEval, eval);
                 alpha = std::max(alpha, eval);
                 if (beta <= alpha)
@@ -394,63 +491,54 @@ public:
         int subboard_x;
         int subboard_y;
         int subboard_val[3][3] = {};
+        Tag tags[3][3];
+
         for (subboard_x = 0; subboard_x < 3; subboard_x++)
             for (subboard_y = 0; subboard_y < 3; subboard_y++)
             {
-                if (this->all_board.state(subboard_x, subboard_y) == Tag::None)
+                tags[subboard_x][subboard_y] = this->all_board.state(subboard_x, subboard_y);
+                if (tags[subboard_x][subboard_y] == Tag::None)
                     subboard_val[subboard_x][subboard_y] = evalSubboard(this->all_board.sub(subboard_x, subboard_y));
                 else
-                    subboard_val[subboard_x][subboard_y] = tag2contrib[this->all_board.state(subboard_x, subboard_y)];
+                    subboard_val[subboard_x][subboard_y] = tag2num[tags[subboard_x][subboard_y]] * 300;
             }
 
-        int cnt = 1;
-        int val;
+        // std::cout << "subboard val: \n";
+        // for (int i = 0; i < 3; i++)
+        // {
+        // std::cout << "\t";
+        // for (int j = 0; j < 3; j++)
+        // std::cout << subboard_val[i][j] << " | ";
+        // std::cout << "\n";
+        // }
+
         int ret = 0;
-        int on_diagonals = 0;
-        for (subboard_x = 0; subboard_x < 3; subboard_x++)
-            for (subboard_y = 0; subboard_y < 3; subboard_y++)
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
             {
-                if (this->all_board.state(subboard_x, subboard_y) != Tag::None)
-                    continue;
-
-                val = 0;
-                ++cnt;
-                // horizontal
-                val += subboard_val[(subboard_x + 1) % 3][subboard_y];
-                val += subboard_val[(subboard_x + 2) % 3][subboard_y];
-
-                // vertical
-                val += subboard_val[subboard_x][(subboard_y + 1) % 3];
-                val += subboard_val[subboard_x][(subboard_y + 2) % 3];
-
-                // diagonal
-                if (subboard_x == subboard_y)
-                {
-                    val += subboard_val[(subboard_x + 1) % 3][(subboard_y + 1) % 3];
-                    val += subboard_val[(subboard_x + 2) % 3][(subboard_y + 2) % 3];
-                    on_diagonals += 1;
-                }
-
-                // subdiagonal
-                if ((subboard_x + subboard_y) == 2)
-                {
-                    val += subboard_val[(subboard_x + 2) % 3][(subboard_y + 1) % 3];
-                    val += subboard_val[(subboard_x + 1) % 3][(subboard_y + 2) % 3];
-                    on_diagonals += 1;
-                }
-
-                if (on_diagonals == 2)
-                    val *= w_center;
-                else if (on_diagonals == 1)
-                    val *= w_corner;
-                else
-                    val *= w_side;
-
-                ret += val;
+                if (i + j == 2 && i == 1)
+                    ret += subboard_val[i][j] / 6;
+                else if (i + j == 2 || i + j == 0)
+                    ret += subboard_val[i][j] / 8;
+                else if (i + j == 1 || i + j == 3)
+                    ret += subboard_val[i][j] / 12;
             }
+        // std::cout << "subboard init ret: " << ret << '\n';
+
+        // horizontal, vertical
+        for (int i = 0; i < 3; i++)
+        {
+            ret += evalAllboardLine(tags[i][0], tags[i][1], tags[i][2]);
+            ret += evalAllboardLine(tags[0][i], tags[1][i], tags[2][i]);
+        }
+        // std::cout << "subboard h/v ret: " << ret << '\n';
+
+        // diagonal, subdiagonal
+        ret += evalAllboardLine(tags[0][0], tags[1][1], tags[2][2]);
+        ret += evalAllboardLine(tags[2][0], tags[1][1], tags[0][2]);
 
         // return the evaluation of pos
-        return ret / cnt;
+        return ret;
     }
 
     void possibleEnemyMove(const std::pair<int, int> &pos, std::vector<std::pair<int, int>> &moves)
