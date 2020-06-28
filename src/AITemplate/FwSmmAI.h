@@ -35,7 +35,7 @@ void PrintState(TA::BoardInterface::Tag tag)
     else
         std::cout << "What is this tag???\n";
 }
-class FwSmmAI : public AIInterface
+class AI : public AIInterface
 {
 private:
     // shared vars
