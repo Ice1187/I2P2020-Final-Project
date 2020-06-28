@@ -26,9 +26,9 @@ for i in range(1, rounds+1):
     result.append(subprocess.run(
         [command], stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=2, shell=True))
     if(i % 100 == 0):
-        print("[-] Round {} ({:.2f}s)".format(i, time.time() - end_time))
         end_time = time.time()
-        
+        print("[-] Round {} ({:.2f}s)".format(i, end_time - start_time))
+
 end_time = time.time()
 
 for r in result:

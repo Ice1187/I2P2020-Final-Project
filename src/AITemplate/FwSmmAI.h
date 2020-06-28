@@ -35,7 +35,7 @@ void PrintState(TA::BoardInterface::Tag tag)
     else
         std::cout << "What is this tag???\n";
 }
-class AI : public AIInterface
+class FwSmmAI : public AIInterface
 {
 private:
     // shared vars
@@ -69,9 +69,9 @@ private:
         TIE,
         EMPTY_1O1X
     };
-    const int w_corner = 3;
-    const int w_side = 2;
-    const int w_center = 4;
+    // const int w_corner = 3;
+    // const int w_side = 2;
+    // const int w_center = 4;
 
     TA::BoardInterface::Tag player2tag(bool player)
     {
@@ -479,7 +479,7 @@ public:
     }
     std::pair<int, int> MinMaxStep()
     {
-        int depth = 3;
+        int depth = 5;
         int subboard_x = this->prev_x % 3;
         int subboard_y = this->prev_y % 3;
         TA::Board subboard = this->all_board.sub(subboard_x, subboard_y);
