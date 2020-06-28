@@ -290,21 +290,21 @@ private:
         switch (cond)
         {
         case O_LINE:
-            return 1200;
+            return 10000;
         case X_LINE:
-            return -1200;
+            return -10000;
         case O_BLOCKED:
-            return -1000;
+            return 0;
         case X_BLOCKED:
-            return 1000;
+            return 0;
         case O_TWO:
-            return 600;
+            return 6000;
         case X_TWO:
-            return -600;
+            return -6000;
         case O_ONE:
-            return 300;
+            return 3000;
         case X_ONE:
-            return -300;
+            return -3000;
         case TIE:
         case EMPTY_1O1X:
             return 0;
@@ -318,13 +318,13 @@ private:
         switch (cond)
         {
         case O_LINE:
-            return 120;
-        case X_LINE:
-            return -120;
-        case O_BLOCKED:
-            return -100;
-        case X_BLOCKED:
             return 100;
+        case X_LINE:
+            return -100;
+        case O_BLOCKED:
+            return 0;
+        case X_BLOCKED:
+            return 0;
         case O_TWO:
             return 60;
         case X_TWO:
@@ -342,6 +342,9 @@ private:
 
     int evalSubboard(TA::BoardInterface &board)
     {
+        if (board.getWinTag() != Tag::None)
+            return tag2num[board.getWinTag()] * 100;
+
         int ret = 0;
         Tag tags[3][3];
         for (int i = 0; i < 3; i++)
@@ -367,7 +370,7 @@ private:
         ret += evalSubboardLine(tags[0][0], tags[1][1], tags[2][2]);
         ret += evalSubboardLine(tags[2][0], tags[1][1], tags[0][2]);
 
-        return ret;
+        return ret / 8;
     }
 
 public:
@@ -476,7 +479,7 @@ public:
     }
     std::pair<int, int> MinMaxStep()
     {
-        int depth = 5;
+        int depth = 3;
         int subboard_x = this->prev_x % 3;
         int subboard_y = this->prev_y % 3;
         TA::Board subboard = this->all_board.sub(subboard_x, subboard_y);
@@ -617,28 +620,34 @@ public:
                 if (tags[subboard_x][subboard_y] == Tag::None)
                     subboard_val[subboard_x][subboard_y] = evalSubboard(this->all_board.sub(subboard_x, subboard_y));
                 else
-                    subboard_val[subboard_x][subboard_y] = tag2num[tags[subboard_x][subboard_y]] * 300;
+                    subboard_val[subboard_x][subboard_y] = tag2num[tags[subboard_x][subboard_y]] * 3000;
             }
 
         // std::cout << "subboard val: \n";
         // for (int i = 0; i < 3; i++)
         // {
-        // std::cout << "\t";
-        // for (int j = 0; j < 3; j++)
-        // std::cout << subboard_val[i][j] << " | ";
-        // std::cout << "\n";
+        //     std::cout << "\t";
+        //     for (int j = 0; j < 3; j++)
+        //         std::cout << subboard_val[i][j] << " |\t";
+        //     std::cout << "\n";
         // }
 
         int ret = 0;
+        int val = 0;
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
             {
+                if (tag2num[tags[i][j]] == 0)
+                    val = subboard_val[i][j];
+                else
+                    val = tag2num[tags[i][j]] * 100;
+
                 if (i + j == 2 && i == 1)
-                    ret += subboard_val[i][j] / 6;
+                    ret += val * 4;
                 else if (i + j == 2 || i + j == 0)
-                    ret += subboard_val[i][j] / 8;
+                    ret += val * 3;
                 else if (i + j == 1 || i + j == 3)
-                    ret += subboard_val[i][j] / 12;
+                    ret += val * 2;
             }
         // std::cout << "subboard init ret: " << ret << '\n';
 
