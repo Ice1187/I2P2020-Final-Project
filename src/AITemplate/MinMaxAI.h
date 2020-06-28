@@ -346,7 +346,6 @@ public:
         // any way
         this->prev_x = this->prev_y = 4;
         this->order = order;
-        srand(time(nullptr));
     }
 
     void callbackReportEnemy(int x, int y) override
