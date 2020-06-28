@@ -62,7 +62,6 @@ public:
             step.second += selectBoard_y * 3;
         }
 
-        std::cout << "Using Random now going to put at (" << step.first << ", " << step.second << ")\n";
         return step;
     }
 
